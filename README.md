@@ -17,7 +17,7 @@ Welcome to the **Children's Day Special Tamil Learning Game**, created with ❤�
 
 ## 🚀 How to Play
 
-1. Open the live link:  *()*
+1. Open the live link:  *( https://sashiniweliketiya.github.io/tamil-with-sashi-game/)*
 2. Match the words or answer the emoji quiz questions correctly.
 3. Check your score and celebrate your learning milestone!
 
