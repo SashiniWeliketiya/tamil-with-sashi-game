@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tamil with Sashi - Children's Day Special Learning Game</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Poppins for kids-friendly look -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Confetti JS for celebrations -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fef08a 0%, #fed7aa 50%, #fbcfe8 100%);
+            min-height: 100vh;
+        }
+        .bouncing {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .pulse-btn {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .pulse-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col items-center justify-between p-4 sm:p-6">
+
+    <header class="w-full max-w-2xl text-center my-4">
+        <div class="inline-block bg-white/80 backdrop-blur-md px-6 py-2 rounded-full shadow-md text-pink-600 font-bold text-sm tracking-wider uppercase mb-2">
+            🎉 Children's Day Special 🎈
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-purple-700 drop-shadow-sm">
+            Tamil with Sashi
+        </h1>
+        <p class="text-slate-600 font-medium mt-1 text-sm sm:text-base">
+            පොඩිත්තන්ගේ දෙමළ අභියෝගය • Fun Tamil Learning Game for Kids! 🌟
+        </p>
+    </header>
+
+    <main id="app-container" class="w-full max-w-2xl bg-white/90 backdrop-blur-xl shadow-2xl rounded-3xl p-6 sm:p-8 mb-6 border-4 border-amber-200">
+        
+        <!-- Welcome Screen -->
+        <div id="screen-welcome" class="text-center py-6">
+            <div class="text-6xl sm:text-7xl mb-4 bouncing">🧒🏽👧🏽🎉</div>
+            <h2 class="text-2xl sm:text-3xl font-bold text-indigo-700 mb-3">
+                Happy Children's Day, Kids! 🌟
+            </h2>
+            <p class="text-slate-600 mb-6 text-sm sm:text-base leading-relaxed">
+                Welcome to <span class="font-bold text-purple-600">Tamil with Sashi</span>! Ready to play fun mini-games, earn glowing stars, and learn cool Tamil words? Let's start the adventure! 🚀
+            </p>
+            <button onclick="startGame()" class="pulse-btn w-full sm:w-auto bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold text-lg px-8 py-4 rounded-2xl shadow-lg hover:from-pink-600 hover:to-purple-700">
+                🎮 Play Games Now! / දැන්ම ක්‍රීඩා කරමු!
+            </button>
+        </div>
+
+        <!-- Game Hub Screen -->
+        <div id="screen-hub" class="hidden text-center py-4">
+            <div class="flex justify-between items-center mb-6 bg-purple-50 p-4 rounded-2xl border border-purple-100">
+                <div>
+                    <span class="text-xs uppercase tracking-wider text-purple-500 font-bold">Total Score</span>
+                    <div id="total-score" class="text-2xl font-extrabold text-purple-700">⭐ 0 Points</div>
+                </div>
+                <div class="text-right">
+                    <span class="text-xs uppercase tracking-wider text-indigo-500 font-bold">Level Progress</span>
+                    <div id="level-progress" class="text-sm font-bold text-indigo-700">Choose a game below!</div>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-bold text-slate-700 mb-4">Choose Your Activity! 👇</h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button onclick="startMatchGame()" class="pulse-btn bg-gradient-to-br from-amber-400 to-orange-500 text-white p-5 rounded-2xl shadow-md text-left flex items-center space-x-4">
+                    <div class="text-4xl bg-white/20 p-3 rounded-xl">🧩</div>
+                    <div>
+                        <h4 class="font-bold text-lg">Activity 1: Match Words</h4>
+                        <p class="text-xs text-amber-100 mt-1">Match Sinhala/English with Tamil!</p>
+                    </div>
+                </button>
+
+                <button onclick="startEmojiQuiz()" class="pulse-btn bg-gradient-to-br from-emerald-400 to-teal-600 text-white p-5 rounded-2xl shadow-md text-left flex items-center space-x-4">
+                    <div class="text-4xl bg-white/20 p-3 rounded-xl">🎯</div>
+                    <div>
+                        <h4 class="font-bold text-lg">Activity 2: Emoji Quiz</h4>
+                        <p class="text-xs text-emerald-100 mt-1">Guess the Tamil word from emojis!</p>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- Activity 1: Match the Words Screen -->
+        <div id="screen-match" class="hidden">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <button onclick="backToHub()" class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-1.5 rounded-xl transition">⬅️ Back</button>
+                <span class="text-sm font-bold text-amber-600">🧩 Activity 1: Match the Words</span>
+                <span id="match-score" class="text-sm font-bold text-purple-600">Score: 0</span>
+            </div>
+
+            <p class="text-sm text-slate-600 mb-4 text-center">
+                Click a Sinhala/English word on the left, then click its matching Tamil word on the right! 👇
+            </p>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <!-- Left Column -->
+                <div id="match-left" class="space-y-3">
+                    <!-- Dynamic Items -->
+                </div>
+                <!-- Right Column -->
+                <div id="match-right" class="space-y-3">
+                    <!-- Dynamic Items -->
+                </div>
+            </div>
+
+            <div id="match-feedback" class="text-center font-bold text-sm min-h-[2rem]"></div>
+        </div>
+
+        <!-- Activity 2: Emoji Quiz Screen -->
+        <div id="screen-quiz" class="hidden">
+            <div class="flex justify-between items-center mb-4 border-b pb-3">
+                <button onclick="backToHub()" class="text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold px-3 py-1.5 rounded-xl transition">⬅️ Back</button>
+                <span class="text-sm font-bold text-teal-600">🎯 Activity 2: Emoji Guessing Quiz</span>
+                <span id="quiz-progress-text" class="text-sm font-bold text-purple-600">Question 1/4</span>
+            </div>
+
+            <div class="text-center my-6">
+                <div id="quiz-emoji" class="text-6xl sm:text-7xl mb-3 bouncing">🍎</div>
+                <h4 id="quiz-question" class="text-lg sm:text-xl font-bold text-slate-800 mb-1">What is this in Tamil?</h4>
+                <p id="quiz-hint" class="text-xs text-slate-500 mb-6">(Hint: Sinhala: ඇපල් / English: Apple)</p>
+
+                <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md mx-auto">
+                    <!-- Options injected via JS -->
+                </div>
+            </div>
+
+            <div id="quiz-feedback" class="text-center font-bold text-sm min-h-[2.5rem] mt-4"></div>
+        </div>
+
+        <!-- Celebration Screen -->
+        <div id="screen-celebration" class="hidden text-center py-6">
+            <div class="text-6xl sm:text-7xl mb-3 bouncing">🏆✨</div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-purple-700 mb-2">
+                Awesome Job, Little Star! 🌟
+            </h2>
+            <p id="final-score-text" class="text-lg font-semibold text-slate-700 mb-4">
+                You scored total stars!
+            </p>
+            <p class="text-slate-600 text-sm mb-6">
+                Happy Children's Day from <b>Tamil with Sashi</b>! Keep learning, keep smiling! 🎉
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-3">
+                <button onclick="resetGame()" class="pulse-btn bg-purple-600 text-white font-bold px-6 py-3 rounded-2xl shadow-md hover:bg-purple-700">
+                    🔄 Play Again / නැවත ක්‍රීඩා කරන්න
+                </button>
+                <button onclick="shareScore()" class="pulse-btn bg-pink-500 text-white font-bold px-6 py-3 rounded-2xl shadow-md hover:bg-pink-600">
+                    💬 Share with Friends!
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="w-full max-w-2xl text-center text-xs text-slate-600 py-2">
+        <p>✨ Created with ❤️ for Children's Day • <b>Tamil with Sashi</b> 🎈</p>
+    </footer>
+
+    <script>
+        // Global Game State
+        let gameState = {
+            totalScore: 0,
+            completedActivities: 0,
+            matchPairs: [
+                { id: 1, left: "ගෙදර / House", right: "வீடு (Veedu)" },
+                { id: 2, left: "බළලා / Cat", right: "பூனை (Poonai)" },
+                { id: 3, left: "පොත / Book", right: "புத்தகம் (Puthhagam)" },
+                { id: 4, left: "තරුව / Star", right: "விண்மீன் (Vinnmeen)" }
+            ],
+            selectedLeft: null,
+            matchScore: 0,
+            matchedCount: 0,
+            
+            quizQuestions: [
+                {
+                    emoji: "🍎",
+                    hint: "Sinhala: ඇපල් / English: Apple",
+                    options: ["ஆப்பிள்/அப்பிள்(Aappil)", "பழம் (Pazham)", "தண்ணீர் (Thanneer)", "பூ (Poo)"],
+                    correct: 0
+                },
+                {
+                    emoji: "☀️",
+                    hint: "Sinhala: හිරු / English: Sun",
+                    options: ["நிலா (Nila)", "சூரியன் (Sooriyan)", "மழை (Mazhai)", "மரம் (Maram)"],
+                    correct: 1
+                },
+                {
+                    emoji: "🥛",
+                    hint: "Sinhala: කිරි / English: Milk",
+                    options: ["நீர் (Neer)", "பால் (Paal)", "தேநீர் (Theneer)", "சாறு (Saaru)"],
+                    correct: 1
+                },
+                {
+                    emoji: "🌸",
+                    hint: "Sinhala: මල / English: Flower",
+                    options: ["இலை (Ilai)", "வேர் (Ver)", "பூ (Poo)", "காய் (Kaai)"],
+                    correct: 2
+                }
+            ],
+            currentQuizIndex: 0,
+            quizScore: 0
+        };
+
+        // Utility: Trigger Confetti celebration
+        function triggerConfetti() {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // Screen Switcher
+        function showScreen(screenId) {
+            ['screen-welcome', 'screen-hub', 'screen-match', 'screen-quiz', 'screen-celebration'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+        }
+
+        function startGame() {
+            showScreen('screen-hub');
+            updateHubStatus();
+        }
+
+        function backToHub() {
+            showScreen('screen-hub');
+            updateHubStatus();
+        }
+
+        function updateHubStatus() {
+            document.getElementById('total-score').innerText = `⭐ ${gameState.totalScore} Points`;
+            if (gameState.completedActivities >= 2) {
+                document.getElementById('level-progress').innerText = "🏆 All Games Completed!";
+            } else if (gameState.completedActivities > 0) {
+                document.getElementById('level-progress').innerText = `✨ ${gameState.completedActivities}/2 Activities Done`;
+            } else {
+                document.getElementById('level-progress').innerText = "🚀 Ready to play!";
+            }
+        }
+
+        // --- ACTIVITY 1: MATCH WORDS LOGIC ---
+        function startMatchGame() {
+            gameState.selectedLeft = null;
+            gameState.matchScore = 0;
+            gameState.matchedCount = 0;
+            document.getElementById('match-score').innerText = "Score: 0";
+            document.getElementById('match-feedback').innerText = "";
+            
+            renderMatchBoard();
+            showScreen('screen-match');
+        }
+
+        function renderMatchBoard() {
+            const leftContainer = document.getElementById('match-left');
+            const rightContainer = document.getElementById('match-right');
+            leftContainer.innerHTML = '';
+            rightContainer.innerHTML = '';
+
+            // Shuffle left items
+            let shuffledLeft = [...gameState.matchPairs].sort(() => Math.random() - 0.5);
+            // Shuffle right items independently
+            let shuffledRight = [...gameState.matchPairs].sort(() => Math.random() - 0.5);
+
+            shuffledLeft.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = `w-full p-3 rounded-xl border-2 font-semibold text-sm transition text-left shadow-sm ${item.matched ? 'bg-emerald-100 border-emerald-400 text-emerald-800 opacity-60 cursor-not-allowed' : 'bg-amber-50 border-amber-200 hover:bg-amber-100 text-amber-900'}`;
+                btn.innerText = item.left;
+                btn.disabled = item.matched;
+                btn.onclick = () => selectLeftMatch(item.id, btn);
+                leftContainer.appendChild(btn);
+            });
+
+            shuffledRight.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = `w-full p-3 rounded-xl border-2 font-semibold text-sm transition text-left shadow-sm ${item.matched ? 'bg-emerald-100 border-emerald-400 text-emerald-800 opacity-60 cursor-not-allowed' : 'bg-purple-50 border-purple-200 hover:bg-purple-100 text-purple-900'}`;
+                btn.innerText = item.right;
+                btn.disabled = item.matched;
+                btn.onclick = () => selectRightMatch(item.id, btn);
+                rightContainer.appendChild(btn);
+            });
+        }
+
+        function selectLeftMatch(id, btnElement) {
+            // Reset previous highlights on left
+            document.querySelectorAll('#match-left button').forEach(b => {
+                if(!b.disabled) b.className = "w-full p-3 rounded-xl border-2 font-semibold text-sm transition text-left shadow-sm bg-amber-50 border-amber-200 hover:bg-amber-100 text-amber-900";
+            });
+            btnElement.className = "w-full p-3 rounded-xl border-2 font-semibold text-sm transition text-left shadow-sm bg-amber-300 border-amber-500 text-amber-950 scale-105 shadow-md";
+            gameState.selectedLeft = id;
+            document.getElementById('match-feedback').innerText = "Great! Now select the correct Tamil word on the right.";
+            document.getElementById('match-feedback').className = "text-center font-bold text-sm text-amber-600";
+        }
+
+        function selectRightMatch(id, btnElement) {
+            if (gameState.selectedLeft === null) {
+                document.getElementById('match-feedback').innerText = "⚠️ Please select a Sinhala/English word on the left first!";
+                document.getElementById('match-feedback').className = "text-center font-bold text-sm text-rose-500";
+                return;
+            }
+
+            if (gameState.selectedLeft === id) {
+                // Correct Match!
+                triggerConfetti();
+                const matchedPair = gameState.matchPairs.find(p => p.id === id);
+                matchedPair.matched = true;
+                gameState.matchScore += 10;
+                gameState.matchedCount++;
+                document.getElementById('match-score').innerText = `Score: ${gameState.matchScore}`;
+                document.getElementById('match-feedback').innerText = "✨ Correct! Superb matching!";
+                document.getElementById('match-feedback').className = "text-center font-bold text-sm text-emerald-600";
+                gameState.selectedLeft = null;
+
+                renderMatchBoard();
+
+                if (gameState.matchedCount === gameState.matchPairs.length) {
+                    // Match game complete!
+                    gameState.totalScore += gameState.matchScore;
+                    gameState.completedActivities = Math.max(gameState.completedActivities, 1);
+                    setTimeout(() => {
+                        alert("🎉 Fantastic! You completed Activity 1!");
+                        checkAllCompleted();
+                    }, 500);
+                }
+            } else {
+                // Wrong Match!
+                document.getElementById('match-feedback').innerText = "❌ Oops! That's not the correct match. Try again!";
+                document.getElementById('match-feedback').className = "text-center font-bold text-sm text-rose-500";
+                gameState.selectedLeft = null;
+                renderMatchBoard();
+            }
+        }
+
+        // --- ACTIVITY 2: EMOJI QUIZ LOGIC ---
+        function startEmojiQuiz() {
+            gameState.currentQuizIndex = 0;
+            gameState.quizScore = 0;
+            showScreen('screen-quiz');
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            const q = gameState.quizQuestions[gameState.currentQuizIndex];
+            document.getElementById('quiz-progress-text').innerText = `Question ${gameState.currentQuizIndex + 1}/${gameState.quizQuestions.length}`;
+            document.getElementById('quiz-emoji').innerText = q.emoji;
+            document.getElementById('quiz-question').innerText = "What is this in Tamil?";
+            document.getElementById('quiz-hint').innerText = q.hint;
+            document.getElementById('quiz-feedback').innerText = "";
+
+            const optionsContainer = document.getElementById('quiz-options');
+            optionsContainer.innerHTML = '';
+
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "p-3 rounded-xl border-2 font-semibold text-sm transition bg-teal-50 border-teal-200 hover:bg-teal-100 text-teal-900 shadow-sm pulse-btn";
+                btn.innerText = opt;
+                btn.onclick = () => checkQuizAnswer(idx, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkQuizAnswer(selectedIdx, btnElement) {
+            const q = gameState.quizQuestions[gameState.currentQuizIndex];
+            const allBtns = document.querySelectorAll('#quiz-options button');
+            allBtns.forEach(b => b.disabled = true);
+
+            if (selectedIdx === q.correct) {
+                triggerConfetti();
+                btnElement.className = "p-3 rounded-xl border-2 font-semibold text-sm transition bg-emerald-500 border-emerald-600 text-white shadow-md";
+                document.getElementById('quiz-feedback').innerText = "🌟 Correct! Excellent job!";
+                document.getElementById('quiz-feedback').className = "text-center font-bold text-sm text-emerald-600";
+                gameState.quizScore += 10;
+            } else {
+                btnElement.className = "p-3 rounded-xl border-2 font-semibold text-sm transition bg-rose-500 border-rose-600 text-white shadow-md";
+                allBtns[q.correct].className = "p-3 rounded-xl border-2 font-semibold text-sm transition bg-emerald-500 border-emerald-600 text-white shadow-md";
+                document.getElementById('quiz-feedback').innerText = "❌ Incorrect! The correct answer is highlighted.";
+                document.getElementById('quiz-feedback').className = "text-center font-bold text-sm text-rose-500";
+            }
+
+            setTimeout(() => {
+                gameState.currentQuizIndex++;
+                if (gameState.currentQuizIndex < gameState.quizQuestions.length) {
+                    loadQuizQuestion();
+                } else {
+                    // Quiz finished!
+                    gameState.totalScore += gameState.quizScore;
+                    gameState.completedActivities = Math.max(gameState.completedActivities, 2);
+                    checkAllCompleted();
+                }
+            }, 1500);
+        }
+
+        function checkAllCompleted() {
+            if (gameState.completedActivities >= 2) {
+                // Reset match pair flags for replayability
+                gameState.matchPairs.forEach(p => p.matched = false);
+                document.getElementById('final-score-text').innerText = `You earned a total of ${gameState.totalScore} glowing stars! ⭐`;
+                showScreen('screen-celebration');
+                triggerConfetti();
+            } else {
+                backToHub();
+            }
+        }
+
+        function resetGame() {
+            gameState.totalScore = 0;
+            gameState.completedActivities = 0;
+            gameState.matchPairs.forEach(p => p.matched = false);
+            startGame();
+        }
+
+        function shareScore() {
+            const shareText = `🎉 I scored ${gameState.totalScore} points in the Tamil with Sashi Children's Day Learning Game! Happy Children's Day! 🎈✨`;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert("📋 Score copied to clipboard! Share it on your Facebook page or WhatsApp!");
+                }).catch(() => {
+                    alert(shareText);
+                });
+            } else {
+                alert(shareText);
+            }
+        }
+    </script>
+</body>
+</html>
